@@ -9,13 +9,11 @@ const afterfx = 'C:/Program Files/Adobe/Adobe After Effects 2020/Support Files/a
 let child_process
 
 module.exports = {
-	generate: (jsxData, path) => new Promise((resolve, reject) => {
+	generate: (data, path) => new Promise((resolve, reject) => {
 		try{
 			const jsxPath = `${path}/AEScriptWithData.jsx`.replace(/\\/gi, '/')
 
-			fs.writeFileSync(jsxPath, 
-				`var data = ${JSON.stringify(jsxData)}`,
-				'utf-8')
+			fs.writeFileSync(jsxPath, data, 'utf-8')
 
 			let jsxSourceStream = fs.createReadStream(jsxSourcePath)
 			let jsxStream = fs.createWriteStream(jsxPath, {'flags': 'a'})

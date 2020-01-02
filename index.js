@@ -1,14 +1,22 @@
 const fs = require('fs-extra')
 const parseMidi = require('midi-file').parseMidi
 const AEScriptRunner = require('./ae/AEScriptRunner')
-const input = fs.readFileSync('midi/플랑도르s.mid')
+const input = fs.readFileSync('midi/Twilight.mid')
 const parsed = parseMidi(input)
 console.log(parsed)
 
 var time = 0
-var speed = 1.2
-var outfadeTime = 0.3
+var speed = 0.8
+var outfadeTime = 0
+var defaultDuration = 1
+var row = 2
+var col = 2
+
+
 var list = []
+var chanelList = [];for(var i=0;i<row*col;i++)chanelList[i]=false
+var maxMultiplayCount = 0
+var multiplayCount = 0
 
 for(i in parsed.tracks[1]){
 	const data = parsed.tracks[1][i]
@@ -16,7 +24,12 @@ for(i in parsed.tracks[1]){
 
 	switch(data.type){
 		case 'noteOn':
-			list.push([data.noteNumber, time, 10000])
+			var noteNumber = data.noteNumber
+
+			list.push([noteNumber, time, time + defaultDuration])
+
+			multiplayCount += 1
+			if(multiplayCount > maxMultiplayCount) maxMultiplayCount = multiplayCount
 			break;
 		case 'noteOff':
 			for(var j = list.length-1 ; j>=0 ; j--){
@@ -26,13 +39,22 @@ for(i in parsed.tracks[1]){
 					break
 				}
 			}
+
+			multiplayCount -= 1
 			break;
 	}
 }
 
-console.log(JSON.stringify(list))
+const data = `
+var data = ${JSON.stringify(list)}
+var maxMultiplayCount = ${maxMultiplayCount}
+var rowNum = ${row}
+var colNum = ${col}
+var compWidth = 1920
+var compHeight = 1080
+`
 
-AEScriptRunner.generate(list, __dirname+'/ae')
+AEScriptRunner.generate(data, __dirname+'/ae')
 	.then(() => {
 		console.log('jsx generate success')
 		AEScriptRunner.run(__dirname+'/ae')
