@@ -1,0 +1,24 @@
+{
+  "name": "midi-video-generator",
+  "version": "1.0.0",
+  "description": "한 음씩 연주한 동영상들과 Midi 파일을 결합하여 영상으로 만드는 프로그램입니다.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/0226daniel/Midi-Video-Generator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/0226daniel/Midi-Video-Generator/issues"
+  },
+  "homepage": "https://github.com/0226daniel/Midi-Video-Generator#readme",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "fs-extra": "^8.1.0",
+    "midi-file": "^1.1.2"
+  }
+}
